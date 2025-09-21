@@ -16,6 +16,7 @@ endpoints.post('/chat/:sala', autenticador, async (req, resp) => {
     
     if (info == 0)
     {
+        console.log(usuarioId);
         resp.status(401).send({
             erro: 'Credenciais Inválidas.'
         })
@@ -27,5 +28,24 @@ endpoints.post('/chat/:sala', autenticador, async (req, resp) => {
         })
     }
 })
+
+endpoints.get('/chat/:sala', autenticador, async (req, resp) => {
+    let salaId = req.params.sala;
+    let usuario_id = req.user.id;
+
+    let info = await repo.checarHistorico(salaId, usuario_id);
+
+    if (info == 0)
+    {
+        resp.status(401).send({
+            erro: 'Credenciais Inválidas.'
+        });
+    }
+    else
+    {
+        resp.send(info)
+    }
+})
+
 
 export default endpoints;
