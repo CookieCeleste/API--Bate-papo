@@ -19,18 +19,18 @@ endpoints.post('/sala/:sala/aprovar/:usuario', autenticador, async (req, resp) =
     let requesterId = req.user.id;
     let targetId = req.params.usuario;
 
-    let registro = await repo.aprovarUsuario(salaId, requesterId, targetId);
+    let registros = await repo.aprovarUsuario(salaId, requesterId, targetId);
 
-    if (registro == 0)
+    if (registros == 0)
     {
-        console.log(registro);
+        console.log(usuarioId);
         resp.status(401).send({
             erro: 'Credenciais Inválidas.'
         });
     }
     else
     {
-        console.log(registro);
+        console.log(registros);
         resp.send('Este usuário agora pode utilizar o chat.');
     }
 });

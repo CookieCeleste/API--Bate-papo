@@ -20,7 +20,7 @@ export async function aprovarUsuario(sala_id, requester_id, target_id) {
         AND aprovado = TRUE;
     `
 
-    const [registro] = await connection.query(cmd, [sala_id, requester_id]);
+    const [registros] = await connection.query(cmd, [sala_id, requester_id]);
 
     const cmd2 =`
     UPDATE salaPermissao
@@ -29,14 +29,14 @@ export async function aprovarUsuario(sala_id, requester_id, target_id) {
         AND usuario_id = ?;
     `
 
-    if (registro.length === 0)
+    if (registros.length === 0)
     {
-        console.log(registro +" (vazio)")
+        console.log(registros +" (vazio)")
         return 0;
     }
     else
     {
-        console.log(registro)
+        console.log(registros)
         const [info] = await connection.query(cmd2, [sala_id, target_id]);
     }
 }
