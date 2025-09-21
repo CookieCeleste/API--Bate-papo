@@ -20,12 +20,13 @@ endpoints.post('/sala/:sala/aprovar/:usuario', autenticador, async (req, resp) =
     let targetId = req.params.usuario;
 
     let registro = await repo.aprovarUsuario(salaId, requesterId, targetId);
+
     if (registro == 0)
     {
         console.log(registro);
         resp.status(401).send({
             erro: 'Credenciais Inválidas.'
-        });        
+        });
     }
     else
     {

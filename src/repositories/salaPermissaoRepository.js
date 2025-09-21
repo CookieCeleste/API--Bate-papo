@@ -31,7 +31,7 @@ export async function aprovarUsuario(sala_id, requester_id, target_id) {
 
     if (registro.length === 0)
     {
-        console.log(registro)
+        console.log(registro +" (vazio)")
         return 0;
     }
     else
