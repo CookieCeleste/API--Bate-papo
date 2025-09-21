@@ -1,17 +1,18 @@
-import { connection } from "../connection";
+import { connection } from "../connection.js";
 
-export function criarSala(novaSala) {
+export async function criarSala(nome, usuario_id) {
     const cmd =`
-    INSERT INTRO sala (nome, criador_id)
+    INSERT INTO sala (nome, usuario_id)
         VALUES(?, ?);
+    `
 
+    const [info] = await connection.query(cmd, [nome, usuario_id]);
+    const salaId = info.insertId;
+
+    const cmd2 =`
     INSERT INTO salaPermissao (sala_id, usuario_id, aprovado)
         VALUES (?, ?, TRUE);
     `
 
-    const [info] = connection.query(cmd, [
-        novaSala.nome,
-        novaSala.criador_id
-    ]);
-    return info.insertId
+    await connection.query(cmd2, [ salaId, usuario_id ]);
 }

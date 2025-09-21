@@ -1,24 +1,38 @@
-import * as repo from '../repositories/salaPermissaoRepository.js'
+import * as repo from '../repositories/salaPermissaoRepository.js';
 
-import { getAuthentication} from '../utils.js/jwt.js'
+import { getAuthentication } from '../utils.js/jwt.js';
 const autenticador = getAuthentication();
 
 import { Router } from "express";
 const endpoints = Router();
 
 endpoints.post ('/sala/:sala/entrar', autenticador, async (req, resp) => {
-    let salaId = req.params.sala
+    let salaId = req.params.sala;
     let usuarioId = req.user.id;
-    await repo.entrarSala(salaId, usuarioId);
+    let sala = await repo.entrarSala(salaId, usuarioId);
 
-    if (!salaId) 
+    resp.send(`Solicitação de entrada enviada.`)
+});
+
+endpoints.post('/sala/:sala/aprovar/:usuario', autenticador, async (req, resp) => {
+    let salaId = req.params.sala;
+    let requesterId = req.user.id;
+    let targetId = req.params.usuario;
+
+    let registro = await repo.aprovarUsuario(salaId, requesterId, targetId);
+    if (registro == 0)
     {
-        resp.status(404).send({
-            erro: 'Sala Não Encontrada.'
-        });
-    } 
-    else 
+        console.log(registro);
+        resp.status(401).send({
+            erro: 'Credenciais Inválidas.'
+        });        
+    }
+    else
     {
-        resp.send(`Solicitação de entrada enviada.`)
+        console.log(registro);
+        resp.send('Este usuário agora pode utilizar o chat.');
     }
 });
+
+
+export default endpoints;

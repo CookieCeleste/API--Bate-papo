@@ -1,11 +1,42 @@
-import { connection } from "../connection";
+import { connection } from "../connection.js";
 
-export function entrarSala(salaId, userId) {
+
+export async function entrarSala(salaId, userId) {
     const cmd =`
     INSERT INTO salaPermissao (sala_id, usuario_id, aprovado)
-    VALUES (?, ?, FALSE);
+        VALUES (?, ?, FALSE);
+    `
+    
+    const [info] = await connection.query(cmd, [salaId, userId]);
+    return info.insertId;
+}
+
+export async function aprovarUsuario(sala_id, requester_id, target_id) {
+    const cmd =`
+    SELECT id
+        FROM salaPermissao
+    WHERE sala_id = ?
+        AND usuario_id = ?
+        AND aprovado = TRUE;
     `
 
-    const [info] = connection.query(cmd, [salaId, userId]);
-    return info.insertId;
+    const [registro] = await connection.query(cmd, [sala_id, requester_id]);
+
+    const cmd2 =`
+    UPDATE salaPermissao
+        SET aprovado = TRUE
+    WHERE sala_id = ?
+        AND usuario_id = ?;
+    `
+
+    if (registro.length === 0)
+    {
+        console.log(registro)
+        return 0;
+    }
+    else
+    {
+        console.log(registro)
+        const [info] = await connection.query(cmd2, [sala_id, target_id]);
+    }
 }

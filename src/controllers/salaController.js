@@ -9,6 +9,10 @@ const endpoints = Router();
 endpoints.post ('/sala', autenticador, async (req, resp) => {
     let nome = req.body.nome;
     let usuarioLogadoId = req.user.id;
+    
     await repo.criarSala(nome, usuarioLogadoId);
-    resp.send(`Sala "${novaSala.nome}" criada.`)
+    resp.send(`Sala "${nome}" criada.`)
 });
+
+
+export default endpoints;

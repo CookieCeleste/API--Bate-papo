@@ -1,14 +1,14 @@
 import { connection } from "../connection.js";
 
 
-export function criarUsuario(novoUsuario) {
+export async function criarUsuario(novoUsuario) {
     const cmd = `
         INSERT INTO usuario (nome, email, senha)
         VALUES (?, ?, MD5(?))
     `
 
     // guarda o resultado da query no array "info" usando o comando(cdm) e um array dos valores de novoUsuario para serem usados no lugar dos "?"
-    const [info] = connection.query(cmd, [
+    const [info] = await connection.query(cmd, [
         novoUsuario.nome, 
         novoUsuario.email, 
         novoUsuario.senha
@@ -18,14 +18,14 @@ export function criarUsuario(novoUsuario) {
     return info.insertId;
 }
 
-export function autenticarUsuario(email, senha) {
+export async function autenticarUsuario(email, senha) {
     const cmd = `
         SELECT id, nome, email
         FROM usuario
         WHERE email = ? AND senha = MD5(?);
     `
 
-    const [registros] = connection.query(cmd, [email, senha]);
+    const [registros] = await connection.query(cmd, [email, senha]);
 
     // retorna o primeiro valor do array registros, que é o id
     return registros[0];
